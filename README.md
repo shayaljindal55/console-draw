@@ -1,8 +1,8 @@
 # NgCanvasDraw
 
-![Creating](statics/images/get-help-command.PNG "get help")
+![Creating](src/assets/images/get-help-command.PNG "get help")
 
-![Creating](statics/images/create-new-canvas.PNG "create new canvas")
+![Creating](src/assets/images/create-new-canvas.PNG "create new canvas")
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.4.
 
