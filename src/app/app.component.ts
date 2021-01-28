@@ -1,4 +1,4 @@
-import {Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { UtilitiesService } from './shared/utilties';
 import { messages } from './shared/custom-messages';
 
@@ -15,7 +15,13 @@ export class AppComponent {
   message = '';
   title = 'Canvas Drawing Application';
   width: number; height: number; shape: string;
+
   getUserCommand(event) {
+    // clear the canvas first
+    this.message = '';
+    this._utilitiesService.clearTheDOM();
+
+    // break and analyse user's input
     const userInputs = this.analyzUserCommand(event.target.value);
     const isValid = this.checkIfParametersAreValid(userInputs.completedCmd);
     if (isValid) {
@@ -33,6 +39,8 @@ export class AppComponent {
         else if (userInputs.baseCmd === 'Q') { }
         else if (userInputs.baseCmd.toLowerCase() === 'h') {
           this.message = messages['help'];
+        } else {
+          this.invalidCommandMsg();
         }
       }
     } else {
@@ -46,7 +54,7 @@ export class AppComponent {
 
   checkIfParametersAreValid(params) {
     for (var i = 1; i < params.length - 1; i++) {
-      if (!this._utilitiesService.isNumeric(params[i])) {
+      if (isNaN(params[i].replace(/\s/g, ""))) {
         return false;
       }
     }
@@ -54,7 +62,7 @@ export class AppComponent {
   }
 
   analyzUserCommand(useInput) {
-    let userInputs = useInput ? useInput.replace(/\s/g, "").split('') : [];
+    let userInputs = useInput ? useInput.split(' ') : [];
     return { baseCmd: userInputs[0], completedCmd: userInputs }
   }
 }
