@@ -1,4 +1,8 @@
 
 .white-text {
-  color: white;
+  color: #FFFFFF;
+}
+.error-msg {
+  color: red;
+  font-weight: bold;
 }

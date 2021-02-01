@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 body {
-  background-color: black;
+  background-color: #000000;
   font-family:Arial, Helvetica, sans-serif;
   overflow:hidden;
   padding: 1%;
@@ -11,15 +11,24 @@ label, span {
 }
 input, textarea {
   margin-bottom: 5%;
-  font-size: 8px;
+  font-size: 14px;
   width: 100%;
+  font-weight: bold;
 }
 h2 {
-  font-size: 14px;
+  font-size: 24px;
   text-align: center;
   margin: 2%;
 }
 canvas {
-  /* width: 100%; */
-  border:1px dashed white;
+  border:1px dashed #FFFFFF;
+}
+button {
+  margin-bottom: 5%;
+  width: 100%;
+  font-size: 14px;
+  font-weight: bold;
+  background: #DC143C;
+  color: #FFFFFF;
+  border: 2px solid #BF0A2E;
 }

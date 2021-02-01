@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { UtilitiesService } from './shared/utilties';
-import { messages } from './shared/custom-messages';
-
+import { commandTypes } from './shared/commandTypes';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,50 +18,66 @@ export class AppComponent {
   getUserCommand(event) {
     // clear the canvas first
     this.message = '';
-    this._utilitiesService.clearTheDOM();
 
     // break and analyse user's input
-    const userInputs = this.analyzUserCommand(event.target.value);
-    const isValid = this.checkIfParametersAreValid(userInputs.completedCmd);
-    if (isValid) {
+    const userInputs = this._utilitiesService.analyzUserCommand(event.target.value);
+    const isValid = this._utilitiesService.checkIfParametersAreValid(userInputs.completedCmd);
+    if (isValid === 1) {
+      const canvasEle = this._utilitiesService.getCanvasElement();
       if (userInputs && userInputs.baseCmd) {
-        if (userInputs.baseCmd === 'C') {
+        if (userInputs.baseCmd === commandTypes.CREATE_NEW_CANVAS) {
+          this._utilitiesService.clearTheDOM();
           if (userInputs.completedCmd.length !== 3) {
-            this.invalidCommandMsg();
+            this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
           } else {
             this._utilitiesService.createCanvas(userInputs.completedCmd);
           }
+        } else if (userInputs.baseCmd === commandTypes.QUIT) {
+          if (userInputs.completedCmd.length !== 1) {
+            this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
+          } else {
+            this._utilitiesService.clearTheDOM();
+            return;
+          }
         }
-        else if (userInputs.baseCmd === 'L') { }
-        else if (userInputs.baseCmd === 'R') { }
-        else if (userInputs.baseCmd === 'B') { }
-        else if (userInputs.baseCmd === 'Q') { }
-        else if (userInputs.baseCmd.toLowerCase() === 'h') {
-          this.message = messages['help'];
+        else if (userInputs.baseCmd.toUpperCase() === commandTypes.HELP) {
+          this.message = this._utilitiesService.invalidCommandMsg('HELP');
+        } else if (!canvasEle) {
+          this.message = this._utilitiesService.invalidCommandMsg('CREATE_CANVAS');
+        }
+        else if (userInputs.baseCmd === commandTypes.DRAW_LINE) {
+          if (userInputs.completedCmd.length !== 5) {
+            this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
+          } else if (this._utilitiesService.checkLineCmd(userInputs.completedCmd)) {
+            this._utilitiesService.drawLine(canvasEle, userInputs.completedCmd);
+          } else {
+            this.message = this._utilitiesService.invalidCommandMsg('INVALID_LINE_CMD')
+          }
+        }
+        else if (userInputs.baseCmd === commandTypes.DRAW_RECT) {
+          this._utilitiesService.drawRectangle(canvasEle, userInputs.completedCmd);
+        }
+        else if (userInputs.baseCmd === commandTypes.BUCKET_FILL) {
+          if (userInputs.completedCmd.length !== 4) {
+            this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
+          } else {
+            this._utilitiesService.bucketFill(canvasEle, userInputs.completedCmd);
+          }
         } else {
-          this.invalidCommandMsg();
+          this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
         }
       }
+    } else if (isValid === -1) {
+      this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
     } else {
-      this.invalidCommandMsg();
+      this.message = this._utilitiesService.invalidCommandMsg('INVALID_NON_NEGATIVE_CMD');
     }
   }
 
-  invalidCommandMsg() {
-    this.message = messages['INVALID_CMD'];
-  }
-
-  checkIfParametersAreValid(params) {
-    for (var i = 1; i < params.length - 1; i++) {
-      if (isNaN(params[i].replace(/\s/g, ""))) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  analyzUserCommand(useInput) {
-    let userInputs = useInput ? useInput.split(' ') : [];
-    return { baseCmd: userInputs[0], completedCmd: userInputs }
+  clearCanvas() {
+    const inputEle = <HTMLInputElement>document.getElementById('user_command');
+    inputEle.value = '';
+    this.message = '';
+    this._utilitiesService.clearTheDOM();
   }
 }

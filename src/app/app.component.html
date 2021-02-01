@@ -1,21 +1,16 @@
 <h2 class="white-text">Welcome to {{ title }}! </h2>
 <div class="row">
-  <div class="col-md-12">
-    <label class="white-text">Command:</label>
+  <label class="white-text">Command:</label>
+  <div class="col-md-10">
     <input type="text" id="user_command" (keyup.enter)="getUserCommand($event)">
   </div>
-  <div id="dymanic_elements"></div>
-  <div class="col-md-12">
-    <span id="message" class="white-text" [innerHTML]="message"></span>
+  <div class="col-md-2">
+    <button type="submit" id="clear_btn" (click)="clearCanvas()">Reset</button>
   </div>
-
 </div>
-<!-- <div class="col-md-4">
-    <label class="white-text">Shape:</label><input type="text" id="shape" (keyup)="getUserCommand($event)">
+<div class="row">
+  <div class="col-md-12 mb-2">
+    <span id="message" class="error-msg" [innerHTML]="message"></span>
   </div>
-  <div class="col-md-4">
-    <label class="white-text">Width:</label><input type="text" id="width" (keyup)="getUserCommand($event)">
-  </div>
-  <div class="col-md-4">
-    <label class="white-text">Height:</label><input type="text" id="height" (keyup)="getUserCommand($event)">
-  </div> -->
+  <div id="dymanic_elements"></div>
+</div>
