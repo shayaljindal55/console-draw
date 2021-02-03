@@ -1,19 +1,31 @@
 import { Injectable } from '../../../node_modules/@angular/core';
+import { commandTypes } from '../shared/commandTypes';
 import { messages } from '../shared/custom-messages';
 @Injectable()
 export class UtilitiesService {
   constructor() {
+  }
+  public _dataURLObj = [];
+
+  setDataURL(dataURLObj) {
+    // remove old value, if any, for the same drawing shape
+    const index = this._dataURLObj.indexOf(dataURLObj.type, 0);
+    if (index > -1) {
+      this._dataURLObj.splice(index, 1);
+    }
+    this._dataURLObj.push(dataURLObj);
+  }
+
+  getDataURL(type) {
+    return this._dataURLObj.find(function (item) {
+      return item.type == type
+    }).dataUrl;
   }
 
   clearTheDOM() {
     const dymanicEle = document.getElementById("dymanic_elements");
     dymanicEle.innerHTML = '';
   }
-
-  // clear the entire canvas
-  // cleanCanvas(canvas, ctx) {
-  //   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // }
 
   createCanvas(userCommand) {
     const canvasEle = document.getElementById("canvas");
@@ -35,18 +47,22 @@ export class UtilitiesService {
     ctx.beginPath();
     ctx.moveTo(userCommand[1], userCommand[2]); // defines the starting point of the line (x1,y1)
     ctx.lineTo(userCommand[3], userCommand[4]); // defines the ending point of the line (x2,y2)
+    ctx.strokeStyle = "red";
     ctx.stroke();
+    this.setDataURL({ type: commandTypes.DRAW_LINE, dataUrl: canvasEle.toDataURL() });
   }
 
   drawRectangle(canvasEle, userCommand) {
     let ctx = this.resetCanvas(canvasEle);
     ctx.fillRect(userCommand[3], userCommand[1], userCommand[2], userCommand[4]); // fills a rectangle positioned at x and y, with a width and height of w and h.
+    this.setDataURL({ type: commandTypes.DRAW_RECT, dataUrl: canvasEle.toDataURL() });
   }
 
   bucketFill(canvasEle, userCommand) {
     let ctx = this.resetCanvas(canvasEle);
     ctx.fillStyle = userCommand[3];
     ctx.fillRect(userCommand[1], userCommand[2], canvasEle.width, canvasEle.height);
+    this.setDataURL({ type: commandTypes.BUCKET_FILL, dataUrl: canvasEle.toDataURL() });
   }
 
   resetCanvas(canvasEle) {

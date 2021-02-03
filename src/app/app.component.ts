@@ -12,15 +12,13 @@ export class AppComponent {
 
   }
   message = '';
-  title = 'Canvas Drawing Application';
   width: number; height: number; shape: string;
 
-  getUserCommand(event) {
-    // clear the canvas first
+  getUserCommand() {
     this.message = '';
-
+    const inputEle = <HTMLInputElement>document.getElementById('user_command');
     // break and analyse user's input
-    const userInputs = this._utilitiesService.analyzUserCommand(event.target.value);
+    const userInputs = this._utilitiesService.analyzUserCommand(inputEle.value);
     const isValid = this._utilitiesService.checkIfParametersAreValid(userInputs.completedCmd);
     if (isValid === 1) {
       const canvasEle = this._utilitiesService.getCanvasElement();
@@ -41,7 +39,12 @@ export class AppComponent {
           }
         }
         else if (userInputs.baseCmd.toUpperCase() === commandTypes.HELP) {
-          this.message = this._utilitiesService.invalidCommandMsg('HELP');
+          if (userInputs.completedCmd.length !== 1) {
+            this.message = this._utilitiesService.invalidCommandMsg('INVALID_CMD');
+          } else {
+            this.message = this._utilitiesService.invalidCommandMsg('HELP');
+            return;
+          }
         } else if (!canvasEle) {
           this.message = this._utilitiesService.invalidCommandMsg('CREATE_CANVAS');
         }

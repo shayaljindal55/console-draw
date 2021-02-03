@@ -1,8 +1,8 @@
-<h2 class="white-text">Welcome to {{ title }}! </h2>
+<h2 class="white-text">Welcome to Canvas Drawing Application! </h2>
 <div class="row">
   <label class="white-text">Command:</label>
   <div class="col-md-10">
-    <input type="text" id="user_command" (keyup.enter)="getUserCommand($event)">
+    <input type="text" id="user_command" (keyup.enter)="getUserCommand()">
   </div>
   <div class="col-md-2">
     <button type="submit" id="clear_btn" (click)="clearCanvas()">Reset</button>
